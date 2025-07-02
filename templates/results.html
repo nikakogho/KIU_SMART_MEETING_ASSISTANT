@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Meeting Results</title>
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+</head>
+<body>
+    <header>
+        <h1>Meeting Analysis Results</h1>
+    </header>
+    <main>
+        <h2>Visual Summary</h2>
+        <img src="{{ results.image_url }}" alt="Visual Summary" style="max-width: 512px;">
+
+        <h2>Summary</h2>
+        <p>{{ results.summary }}</p>
+
+        <h2>Full Transcript</h2>
+        <pre><code>{{ results.transcript }}</code></pre>
+        
+        <a href="/">Process another meeting</a>
+    </main>
+</body>
+</html>
