@@ -6,3 +6,4 @@ numpy
 pyannote.audio
 torch
 torchaudio
+pydub

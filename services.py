@@ -10,6 +10,9 @@ from pyannote.audio import Pipeline
 from pyannote.core import Annotation
 import wave
 import contextlib
+from pydub import AudioSegment
+
+AudioSegment.converter = r"C:\ffmpeg\bin\ffmpeg.exe"
 
 load_dotenv()
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
@@ -119,7 +122,7 @@ def combine_transcript_and_diarize_results(diarization: Annotation, transcriptio
     print("Combination complete.")
     return final_transcript.strip()
 
-def analyze_meeting_transcript(transcript_text: str) -> dict:
+def analyze_meeting_transcript(transcript_text: str, client: OpenAI) -> dict:
     """
     Analyzes a meeting transcript using GPT-4-turbo to extract summary, decisions, and action items.
 
@@ -129,10 +132,6 @@ def analyze_meeting_transcript(transcript_text: str) -> dict:
     Returns:
         dict: A dictionary containing the structured analysis.
     """
-    # Load environment variables (for the OpenAI API key)
-    load_dotenv()
-    client = OpenAI()
-
     # This is the core of the request. The system prompt defines the AI's role
     # and the exact JSON structure we want. This makes the output highly reliable.
     system_prompt = """
@@ -326,3 +325,19 @@ def generate_and_save_image(prompt: str, client: OpenAI, output_filename: str):
 
     except Exception as e:
         print(f"❌ An error occurred during image generation or download: {e}")
+
+def convert_audio_to_wav(filepath: str) -> str:
+    """Converts an audio file to WAV format if it's not already."""
+    path, ext = os.path.splitext(filepath)
+    if ext.lower() == '.wav':
+        return filepath # It's already a WAV file
+
+    print(f"Converting {ext} to .wav...")
+    try:
+        sound = AudioSegment.from_file(filepath)
+        wav_filepath = path + ".wav"
+        sound.export(wav_filepath, format="wav")
+        return wav_filepath
+    except Exception as e:
+        print(f"Error during audio conversion: {e}")
+        raise # Re-raise the exception to be caught by the main handler
