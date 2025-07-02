@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 
 def analyze_meeting_transcript(transcript_text: str) -> dict:
     """
-    Analyzes a meeting transcript using GPT o3-mini to extract summary, decisions, and action items.
+    Analyzes a meeting transcript using GPT-4-turbo to extract summary, decisions, and action items.
 
     Args:
         transcript_text (str): The full text of the meeting transcript.
@@ -29,12 +29,11 @@ def analyze_meeting_transcript(transcript_text: str) -> dict:
     3. "action_items": A list of tasks assigned to individuals. Each item in the list must be a JSON object with three keys: "task" (the specific action to be taken), "owner" (the person responsible), and "due_date" (the deadline, if mentioned). If an owner or due_date is not mentioned for a task, set its value to "Not specified". If no action items were assigned, return an empty list [].
     """
 
-    print("🤖 Sending transcript to o3-mini for analysis...")
+    print("🤖 Sending transcript to GPT-4 for analysis...")
 
     try:
         response = client.chat.completions.create(
-            # Using o3-mini as it's cheap and smart
-            model="o3-mini",
+            model="gpt-4-turbo",
             # This crucial parameter tells the API to guarantee the output is valid JSON
             response_format={"type": "json_object"},
             messages=[
