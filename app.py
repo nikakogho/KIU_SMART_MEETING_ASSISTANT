@@ -71,7 +71,8 @@ def upload_and_process():
                 # 5. Index for Search
                 summary = analysis_data.get("summary", "")
                 decisions = " ".join(analysis_data.get("decisions_made", []))
-                text_for_embedding = f"Summary: {summary}\n\nDecisions: {decisions}"
+                effectiveness_rating = analysis_data.get("effectiveness_rating", "Not specified")
+                text_for_embedding = f"Summary: {summary}\n\nDecisions: {decisions}\n\nEffectiveness Rating: {effectiveness_rating}"
                 embedding = create_embedding(text_for_embedding, client)
 
                 kb_file = "meetings_kb.json"
@@ -89,9 +90,10 @@ def upload_and_process():
                 # 6. Prepare results for the template
                 results = {
                     "transcript": full_transcript,
-                    "summary": analysis_data.get("summary", "N/A"),
+                    "summary": summary,
                     "decisions": analysis_data.get("decisions_made", []),
                     "action_items": analysis_data.get("action_items", []),
+                    "effectiveness_rating": effectiveness_rating,
                     "image_url": url_for('static', filename=image_filename)
                 }
                 

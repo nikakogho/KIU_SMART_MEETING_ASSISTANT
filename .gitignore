@@ -13,3 +13,8 @@ env
 .idea/
 .vscode/
 .DS_Store
+
+static/
+analyses/
+uploads/
+meetings_kb.json

@@ -139,10 +139,11 @@ def analyze_meeting_transcript(transcript_text: str, client: OpenAI) -> dict:
     Your task is to process the provided transcript and extract the following information
     in a clean, structured JSON format.
 
-    The JSON object must have the following three keys:
+    The JSON object must have the following 4 keys:
     1. "summary": A concise, one-paragraph summary of the meeting's purpose and key discussions.
     2. "decisions_made": A list of key decisions that were finalized during the meeting. Each item in the list should be a clear, unambiguous string. If no decisions were made, return an empty list [].
     3. "action_items": A list of tasks assigned to individuals. Each item in the list must be a JSON object with three keys: "task" (the specific action to be taken), "owner" (the person responsible), and "due_date" (the deadline, if mentioned). If an owner or due_date is not mentioned for a task, set its value to "Not specified". If no action items were assigned, return an empty list [].
+    4. "effectiveness_rating": A numerical rating from 1 to 10 indicating the overall effectiveness of the meeting, based on the clarity of discussions, decision-making, and action item assignments. 1 means very ineffective, 10 means highly effective. If no rating is provided in the transcript, use common sense.
     """
 
     print("🤖 Sending transcript to GPT-4 for analysis...")
