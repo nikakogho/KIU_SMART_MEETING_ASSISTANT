@@ -108,12 +108,15 @@ def combine_transcript_and_diarize_results(diarization: Annotation, transcriptio
         # Find all words that fall within the current speaker's turn
         while word_index < len(transcribed_words):
             word_info = transcribed_words[word_index]
+            start = word_info.start
+            word = word_info.word
+
             # Check if the start of the word is within the current speaker's turn
-            if word_info.start >= turn.start and word_info.start <= turn.end:
-                final_transcript += f" {word_info.word}"
+            if start >= turn.start and start <= turn.end:
+                final_transcript += f" {word}"
                 word_index += 1
             # If the word starts after the current turn, break to move to the next speaker
-            elif word_info.start > turn.end:
+            elif start > turn.end:
                 break
             # If the word starts before the turn, it might be an unassigned word; skip it.
             else:
@@ -132,6 +135,11 @@ def analyze_meeting_transcript(transcript_text: str, client: OpenAI) -> dict:
     Returns:
         dict: A dictionary containing the structured analysis.
     """
+
+    if not transcript_text:
+        print("❌ Transcript is empty. Skipping analysis.")
+        return None
+
     # This is the core of the request. The system prompt defines the AI's role
     # and the exact JSON structure we want. This makes the output highly reliable.
     system_prompt = """

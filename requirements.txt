@@ -7,3 +7,5 @@ pyannote.audio
 torch
 torchaudio
 pydub
+pytest
+pytest-mock
