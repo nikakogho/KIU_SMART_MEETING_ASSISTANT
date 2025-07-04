@@ -18,3 +18,5 @@ static/
 analyses/
 uploads/
 meetings_kb.json
+meeting_analysis.json
+meeting_visual_summary.png
