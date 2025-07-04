@@ -9,7 +9,7 @@ from openai import OpenAI
 # Ensure you have a 'services.py' file in the same directory with all the
 # necessary functions defined.
 from services import (
-    diarize_audio, transcribe_with_word_timestamps, combine_transcript_and_diarize_results,
+    chunk_and_transcribe_audio, diarize_audio, transcribe_with_word_timestamps, combine_transcript_and_diarize_results,
     analyze_meeting_transcript, create_dalle_prompt, generate_and_save_image,
     create_embedding, answer_from_meetings, convert_audio_to_wav
 )
@@ -68,8 +68,8 @@ def upload_and_process():
             return redirect(request.url)
 
         try:
-            flash('Step 3/7: Transcribing audio to text...')
-            transcription = transcribe_with_word_timestamps(wav_filepath)
+            flash('Step 3/7: Chunking and transcribing audio to text...')
+            transcription = chunk_and_transcribe_audio(wav_filepath, client)
         except Exception as e:
             flash(f'An error occurred during audio transcription: {e}')
             return redirect(request.url)

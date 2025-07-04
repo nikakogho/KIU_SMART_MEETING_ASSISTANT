@@ -78,6 +78,51 @@ def transcribe_with_word_timestamps(audio_path: str) -> dict:
     print("Transcription complete.")
     return transcript_result
 
+def chunk_and_transcribe_audio(audio_path: str, client: OpenAI) -> dict:
+    """
+    Splits a large audio file into chunks, transcribes each, and combines the results.
+    """
+    print("Audio file is large. Starting chunking process...")
+    audio = AudioSegment.from_wav(audio_path)
+    
+    # Define chunk length in milliseconds (e.g., 15 minutes)
+    chunk_length_ms = 15 * 60 * 1000
+    chunks = [audio[i:i + chunk_length_ms] for i in range(0, len(audio), chunk_length_ms)]
+    
+    all_words = []
+    total_duration_processed = 0
+    
+    # Process each chunk
+    for i, chunk in enumerate(chunks):
+        chunk_filename = f"temp_chunk_{i}.wav"
+        print(f"Processing chunk {i+1}/{len(chunks)}...")
+        chunk.export(chunk_filename, format="wav")
+        
+        # Transcribe the individual chunk
+        with open(chunk_filename, "rb") as audio_file:
+            transcript_result = client.audio.transcriptions.create(
+                file=audio_file,
+                model=TRANSCRIBE_MODEL,
+                response_format="verbose_json",
+                timestamp_granularities=["word"]
+            )
+        
+        # VERY IMPORTANT: Adjust timestamps of the words in the current chunk
+        for word in transcript_result.words:
+            word.start += total_duration_processed
+            word.end += total_duration_processed
+            all_words.append(word)
+            
+        # Update the total duration processed so far
+        total_duration_processed += chunk.duration_seconds
+        
+        # Clean up the temporary chunk file
+        os.remove(chunk_filename)
+        
+    print("All chunks processed and combined.")
+    # Return a dictionary that mimics the structure of the original API response
+    return {words: all_words}
+
 def combine_transcript_and_diarize_results(diarization: Annotation, transcription: dict) -> str:
     """
     Combines diarization and transcription results into a formatted string.
