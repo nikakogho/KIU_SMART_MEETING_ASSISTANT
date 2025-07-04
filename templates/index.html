@@ -4,25 +4,35 @@
     <meta charset="UTF-8">
     <title>Smart Meeting Assistant</title>
     <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
-</head><body>
-    <header>
-        <h1>Smart Meeting Assistant</h1>
-        <p>Upload your meeting audio (.wav, .mp3, .m4a) to get started.</p>
-    </header>
-    <main>
-        <form method=post enctype=multipart/form-data>
-          <input type=file name=file>
-          <input type=submit value=Upload>
+</head>
+<body>
+    <section>
+      <header>
+          <h1>Smart Meeting Assistant</h1>
+          <p>Upload your meeting audio (.wav, .mp3, .m4a) to get started.</p>
+      </header>
+      <main>
+          <form method=post enctype=multipart/form-data>
+            <input type=file name=file>
+            <input type=submit value=Upload>
+          </form>
+          {% with messages = get_flashed_messages() %}
+            {% if messages %}
+              <ul class=flashes>
+              {% for message in messages %}
+                <li>{{ message }}</li>
+              {% endfor %}
+              </ul>
+            {% endif %}
+          {% endwith %}
+      </main>
+    </section>
+    <section>
+        <h2>Search Past Meetings</h2>
+        <form action="/search" method="get">
+          <input type="search" name="query" placeholder="Ask about past meetings..." required>
+          <button type="submit">Search</button>
         </form>
-        {% with messages = get_flashed_messages() %}
-          {% if messages %}
-            <ul class=flashes>
-            {% for message in messages %}
-              <li>{{ message }}</li>
-            {% endfor %}
-            </ul>
-          {% endif %}
-        {% endwith %}
-    </main>
+    </section>
 </body>
 </html>

@@ -341,3 +341,44 @@ def convert_audio_to_wav(filepath: str) -> str:
     except Exception as e:
         print(f"Error during audio conversion: {e}")
         raise # Re-raise the exception to be caught by the main handler
+
+def answer_from_meetings(query: str, client: OpenAI) -> str:
+    """
+    Retrieves the most relevant meeting context from the knowledge base and generates an answer.
+    """
+    KNOWLEDGE_BASE_FILE = "meetings_kb.json"
+    SIMILARITY_THRESHOLD = 0.5
+
+    # 1. Check if the knowledge base exists
+    if not os.path.exists(KNOWLEDGE_BASE_FILE):
+        return "The knowledge base has not been created yet. Please process at least one meeting."
+
+    with open(KNOWLEDGE_BASE_FILE, 'r', encoding='utf-8') as f:
+        knowledge_base = json.load(f)
+
+    if not knowledge_base:
+        return "The knowledge base is empty. Please process at least one meeting."
+
+    # 2. Create an embedding for the user's query
+    print(f"Creating embedding for query: '{query}'")
+    query_embedding = create_embedding(query, client)
+
+    # 3. Find the most relevant meeting text
+    best_match = None
+    highest_similarity = -1.0
+
+    for entry in knowledge_base:
+        similarity = cosine_similarity(np.array(query_embedding), np.array(entry["embedding"]))
+        if similarity > highest_similarity:
+            highest_similarity = similarity
+            best_match = entry
+
+    # 4. Check if the best match is relevant enough
+    if not best_match or highest_similarity < SIMILARITY_THRESHOLD:
+        return "I could not find a specific answer to your question in the processed meetings."
+
+    print(f"Found relevant context in meeting '{best_match['meeting_id']}' with similarity {highest_similarity:.4f}")
+
+    # 5. Use the context to generate a final answer
+    context_text = best_match["text"]
+    return generate_answer(query, context_text, client)
