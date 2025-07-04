@@ -21,23 +21,20 @@ This application integrates four key OpenAI APIs to deliver its primary function
 
 * **Meeting Summaries**: Generates concise summaries that highlight the key discussion points and outcomes.
 * **Action Item Extraction**: Identifies and extracts actionable tasks, and assigns ownership of those tasks to the responsible individuals.
-* **Calendar and Task Integration (Bonus)**: Connects with calendar and task management APIs to automatically create events and to-do items from the meeting's content.
 
 ### 🔍 3. Semantic Search with Embeddings API
 
 * **Knowledge Base Creation**: Develops a searchable repository of information from all processed meetings.
-* **Similarity-Based Recommendations**: Suggests relevant past meetings or documents based on the content of the current meeting.
+* **Similarity-Based Recommendations**: Suggests relevant past meetings or documents based on the user query.
 
 ### 🎨 4. Visual Concept Synthesis with DALL-E 3
 
 * **Visual Summaries**: Creates engaging visual representations of meeting outcomes for stakeholders who were not in attendance.
-* **Automated Presentation Assets**: Generates images and diagrams that can be used in follow-up presentations and reports.
 
 ---
 
 ## 🚀 Advanced Features
 
-* **Real-Time Processing**: Live meeting transcription and analysis using WebSocket technology.
 * **Predictive Analytics**: Predicts the effectiveness of a meeting based on various data points.
 
 ---
@@ -91,13 +88,19 @@ Once the application is running, open your web browser and navigate to `http://1
 
 ---
 
+## Code
+
+Most of the logic is in `services.py`
+
+---
+
 ##  deliverables
 
 ### 🎥 5-Minute Video Demo
 
 [Link to the video demo will be here.]
 
-### プレゼンテーション 5-7 Minute Technical Presentation
+### Technical Presentation
 
 [Link to the presentation slides or recording will be here.]
 
@@ -105,4 +108,4 @@ Once the application is running, open your web browser and navigate to `http://1
 
 ## ✅ Test Cases
 
-The project includes a suite of pre-written test cases to ensure the functionality and reliability of the system. These tests cover all the core features and can be found in the `/tests` directory.
+The project includes a suite of test cases to ensure the functionality and reliability of the system. These tests cover the core features and can be found in the `/tests` directory.
