@@ -70,6 +70,7 @@ def upload_and_process():
         try:
             flash('Step 3/7: Chunking and transcribing audio to text...')
             transcription = chunk_and_transcribe_audio(wav_filepath, client)
+            print("Transcription completed:", transcription)
         except Exception as e:
             flash(f'An error occurred during audio transcription: {e}')
             return redirect(request.url)

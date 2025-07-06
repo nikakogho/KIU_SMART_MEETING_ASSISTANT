@@ -78,11 +78,11 @@ def transcribe_with_word_timestamps(audio_path: str) -> dict:
     print("Transcription complete.")
     return transcript_result
 
-def chunk_and_transcribe_audio(audio_path: str, client: OpenAI) -> dict:
+def chunk_and_transcribe_audio(audio_path: str, client: OpenAI) -> list:
     """
     Splits a large audio file into chunks, transcribes each, and combines the results.
     """
-    print("Audio file is large. Starting chunking process...")
+    print("Starting chunking process...")
     audio = AudioSegment.from_wav(audio_path)
     
     # Define chunk length in milliseconds (e.g., 15 minutes)
@@ -106,7 +106,7 @@ def chunk_and_transcribe_audio(audio_path: str, client: OpenAI) -> dict:
                 response_format="verbose_json",
                 timestamp_granularities=["word"]
             )
-        
+            
         # VERY IMPORTANT: Adjust timestamps of the words in the current chunk
         for word in transcript_result.words:
             word.start += total_duration_processed
@@ -118,12 +118,14 @@ def chunk_and_transcribe_audio(audio_path: str, client: OpenAI) -> dict:
         
         # Clean up the temporary chunk file
         os.remove(chunk_filename)
+
+        print('Done processing chunk:', i + 1)
         
     print("All chunks processed and combined.")
     # Return a dictionary that mimics the structure of the original API response
-    return {words: all_words}
+    return all_words
 
-def combine_transcript_and_diarize_results(diarization: Annotation, transcription: dict) -> str:
+def combine_transcript_and_diarize_results(diarization: Annotation, transcription: list) -> str:
     """
     Combines diarization and transcription results into a formatted string.
 
@@ -136,7 +138,7 @@ def combine_transcript_and_diarize_results(diarization: Annotation, transcriptio
     """
     print("Step 3: Combining diarization and transcription...")
     final_transcript = ""
-    transcribed_words = transcription.words
+    transcribed_words = transcription
     
     # Get speaker turns from the diarization result
     speaker_turns = list(diarization.itertracks(yield_label=True))
@@ -401,7 +403,7 @@ def answer_from_meetings(query: str, client: OpenAI) -> str:
     Retrieves the most relevant meeting context from the knowledge base and generates an answer.
     """
     KNOWLEDGE_BASE_FILE = "meetings_kb.json"
-    SIMILARITY_THRESHOLD = 0.5
+    SIMILARITY_THRESHOLD = 0.4
 
     # 1. Check if the knowledge base exists
     if not os.path.exists(KNOWLEDGE_BASE_FILE):

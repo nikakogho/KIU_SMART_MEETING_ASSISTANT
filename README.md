@@ -94,17 +94,9 @@ Most of the logic is in `services.py`
 
 ---
 
-##  deliverables
+## 🎥 5-Minute Video Demo
 
-### 🎥 5-Minute Video Demo
-
-[Link to the video demo will be here.]
-
-### Technical Presentation
-
-[Link to the presentation slides or recording will be here.]
-
----
+The demo is at `Smart Meeting Assistant KIU nika koghuashvili.mkv` at the root of this project
 
 ## ✅ Test Cases
 
